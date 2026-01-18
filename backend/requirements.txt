@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+websockets
+slipcore>=2.4.0
+python-multipart
