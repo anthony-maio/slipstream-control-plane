@@ -31,7 +31,10 @@ export function Autotuner({ proposals, onApprove }) {
 
                     <div className="flex gap-3">
                         <button
-                            onClick={() => onApprove(proposal.id)}
+                            onClick={() => {
+                                console.log("Approving proposal:", proposal.id);
+                                onApprove(proposal.id);
+                            }}
                             className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                         >
                             <Check size={16} />

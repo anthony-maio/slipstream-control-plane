@@ -11,8 +11,9 @@ import { cn } from './lib/utils.js';
 function App() {
   const [messages, setMessages] = useState([]);
   const [proposals, setProposals] = useState([]);
+  const [toast, setToast] = useState(null);
   const [mode, setMode] = useState('slipstream');
-  const [view, setView] = useState('dashboard'); // 'dashboard' | 'registry' | 'resources'
+  const [view, setView] = useState('resources'); // Default to 'resources'
   const [isConnected, setIsConnected] = useState(false);
   const ws = useRef(null);
 
@@ -65,6 +66,7 @@ function App() {
     const connect = () => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const hubPath = import.meta.env.VITE_WS_URL || `${protocol}//${window.location.host}/ws/hub`;
+      console.log("Attempting WS Connection to:", hubPath); // DEBUG
       ws.current = new WebSocket(hubPath);
 
       ws.current.onopen = () => {
@@ -160,14 +162,29 @@ function App() {
         ) : view === 'registry' ? (
           <Registry />
         ) : (
-          <Resources />
+          <Resources onNavigate={setView} />
         )}
 
         {/* Autotuner Overlay (Always active) */}
         <Autotuner
           proposals={proposals}
-          onApprove={(id) => setProposals(prev => prev.filter(p => p.id !== id))}
+          onApprove={(id) => {
+            const p = proposals.find(p => p.id === id);
+            if (p) {
+              setToast(`Anchor '${p.mnemonic}' Registered to Universal Control Registry`);
+              setTimeout(() => setToast(null), 3000);
+            }
+            setProposals(prev => prev.filter(p => p.id !== id));
+          }}
         />
+
+        {/* Toast Notification */}
+        {toast && (
+          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-500/10 border border-green-500/50 text-green-400 px-6 py-3 rounded-full shadow-lg backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 flex items-center gap-3 font-mono text-sm z-50">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            {toast}
+          </div>
+        )}
 
       </div>
     </div>

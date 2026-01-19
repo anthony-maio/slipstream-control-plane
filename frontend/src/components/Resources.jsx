@@ -1,126 +1,72 @@
 import React from 'react';
-import { BookOpen, Github, Database, FileText, Globe, Box, Cpu, Layers } from 'lucide-react';
+import { BookOpen, Map, LayoutDashboard, Zap, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '../lib/utils.js';
 
-export function Resources() {
-    const resources = [
-        {
-            title: "Research Paper",
-            description: "Read the formal definition of the Slipstream Protocol and the mathematics behind the Semantic Manifold.",
-            icon: FileText,
-            color: "text-red-400",
-            link: "https://zenodo.org/records/18115418",
-            meta: "DOI: 10/5281/zenodo.18115418"
-        },
-        {
-            title: "SlipCore Library",
-            description: "The official open-source Python implementation. Drop-in compatible with standard LLM agent frameworks.",
-            icon: Github,
-            color: "text-white",
-            link: "https://www.github.com/anthony-maio/slipcore",
-            meta: "GitHub"
-        },
-        {
-            title: "Hugging Face Collection",
-            description: "Access all finetuned models (GGUF, 4-bit, 8-bit) optimized for Slipstream communication.",
-            icon: Box,
-            color: "text-yellow-400",
-            link: "https://huggingface.co/collections/anthonym21/streamlined-inter-agent-protocol-slipstream",
-            meta: "Models"
-        },
-        {
-            title: "Governance Demo",
-            description: "Interactive OpenEnv demo showcasing Slipstream RLHF (GRPO) for safe agent coordination.",
-            icon: Globe,
-            color: "text-blue-400",
-            link: "https://huggingface.co/spaces/anthonym21/slipstream-governance-openenv",
-            meta: "Live Demo"
-        },
-        {
-            title: "Training Dataset",
-            description: "The 'Think-Quantize-Transmit' dataset used to train the Z1-9B models.",
-            icon: Database,
-            color: "text-cyan-400",
-            link: "https://huggingface.co/datasets/anthonym21/slipstream-tqt",
-            meta: "Hugging Face"
-        },
-        {
-            title: "Kaggle Dataset",
-            description: "Alternative mirror of the training data and benchmarks.",
-            icon: Database,
-            color: "text-sky-400",
-            link: "https://www.kaggle.com/datasets/anthonymaio/slipstream-think-quantize-transmit-dataset",
-            meta: "Kaggle"
-        },
-        {
-            title: "Blog Post",
-            description: "Deep dive into the architecture and motivation behind Slipstream.",
-            icon: BookOpen,
-            color: "text-green-400",
-            link: "https://huggingface.co/blog/anthonym21/slipstream-for-agent-communication",
-            meta: "Article"
-        }
-    ];
-
+export function Resources({ onNavigate }) {
     return (
-        <div className="space-y-8 animate-in fade-in duration-500 pb-12">
+        <div className="space-y-8 animate-in fade-in duration-500">
+            {/* Hero Section */}
+            <div className="bg-gradient-to-br from-indigo-950 to-slate-900 rounded-3xl p-8 border border-white/5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="relative z-10">
+                    <h2 className="text-3xl font-bold text-white mb-4">Welcome to Slipstream</h2>
+                    <p className="text-lg text-indigo-200 max-w-2xl mb-8 leading-relaxed">
+                        A semantic quantization protocol for multi-agent systems. Slipstream uses shared conceptual anchors (UCR) to compress verbose JSON communication into dense, efficient tokens, achieving up to 90% bandwidth reduction.
+                    </p>
 
-            {/* Intro Section */}
-            <div className="bg-card/30 border border-border rounded-2xl p-8 backdrop-blur-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-                    <Layers size={200} />
-                </div>
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                    <Cpu className="text-primary" />
-                    What is Slipstream?
-                </h2>
-                <div className="space-y-4 text-secondary leading-relaxed max-w-3xl">
-                    <p>
-                        <strong className="text-foreground">Slipstream</strong> is a semantic quantization protocol designed to solve the bandwidth bottleneck in multi-agent systems.
-                    </p>
-                    <p>
-                        Instead of exchanging verbose natural language (English), agents trained on the
-                        <span className="text-indigo-400 font-mono text-xs mx-1 px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20">Think-Quantize-Transmit</span>
-                        paradigm map their intents to a shared high-dimensional manifold (The UCR).
-                        They transmit concise "Anchors"—atomic tokens that represent complex thoughts—reducing token usage by up to <strong>92%</strong> while maintaining semantic fidelity.
-                    </p>
-                    <p>
-                        This Control Plane allows you to observe this "telepathy" in real-time, monitor expected vs. actual behavior (Disagreement Rate), and intervene when the protocol drifts.
-                    </p>
+                    <button
+                        onClick={() => onNavigate('dashboard')}
+                        className="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] flex items-center gap-2 group"
+                    >
+                        See it in Action
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
                 </div>
             </div>
 
-            {/* Links Grid */}
-            <div>
-                <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                    <Globe className="text-indigo-400" size={20} />
-                    Resources & Downloads
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {resources.map((item, i) => (
-                        <a
-                            key={i}
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-card border border-border rounded-xl p-5 hover:bg-card/80 hover:border-primary/50 transition-all duration-300 group flex flex-col h-full"
-                        >
-                            <div className="flex justify-between items-start mb-3">
-                                <div className={cn("p-2 rounded-lg bg-background border border-border group-hover:scale-110 transition-transform duration-300", item.color)}>
-                                    <item.icon size={20} />
-                                </div>
-                                <span className="text-[10px] font-mono uppercase tracking-wider text-secondary border border-border px-2 py-1 rounded-full">
-                                    {item.meta}
-                                </span>
-                            </div>
-                            <h4 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{item.title}</h4>
-                            <p className="text-sm text-secondary leading-normal flex-grow">
-                                {item.description}
-                            </p>
-                        </a>
-                    ))}
+            {/* Guides Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Registry Guide */}
+                <div className="p-6 bg-card border border-border rounded-2xl hover:bg-card/80 transition-colors group cursor-pointer" onClick={() => onNavigate('registry')}>
+                    <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <Map className="text-emerald-400" size={24} />
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2 flex items-center gap-2">
+                        Universal Concept Registry
+                        <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-emerald-400" />
+                    </h3>
+                    <p className="text-secondary leading-relaxed">
+                        The <strong>Registry</strong> contains the global dictionary of compressed "anchors".
+                        Each anchor maps a complex semantic concept (like "Authentication Protocol") to a single token, visible and synchronized across the entire swarm.
+                    </p>
                 </div>
+
+                {/* Dashboard Guide */}
+                <div className="p-6 bg-card border border-border rounded-2xl hover:bg-card/80 transition-colors group cursor-pointer" onClick={() => onNavigate('dashboard')}>
+                    <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <LayoutDashboard className="text-blue-400" size={24} />
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2 flex items-center gap-2">
+                        Live Control Plane
+                        <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-blue-400" />
+                    </h3>
+                    <p className="text-secondary leading-relaxed">
+                        The <strong>Dashboard</strong> visualizes real-time agent traffic. Watch as the <strong>Autotuner</strong> detects repetitive patterns and proposes new anchors, dynamically optimizing the network before your eyes.
+                    </p>
+                </div>
+
             </div>
+
+            {/* External Link */}
+            <a
+                href="https://github.com/making-minds/slipstream"
+                target="_blank"
+                rel="noreferrer"
+                className="block p-4 mt-8 bg-black/20 border border-white/5 rounded-xl text-center text-sm text-secondary hover:text-white hover:bg-black/40 transition-colors"
+            >
+                Read the Protocol Specification <ExternalLink size={12} className="inline ml-1 mb-0.5" />
+            </a>
         </div>
     );
 }

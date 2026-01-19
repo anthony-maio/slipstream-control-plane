@@ -147,8 +147,9 @@ export function NetworkGraph({ messages }) {
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2"
-                    style={{ left: config.x, top: config.y }}
+                    transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                    className="absolute flex flex-col items-center gap-2"
+                    style={{ left: config.x, top: config.y, transform: 'translate(-50%, -50%)' }}
                 >
                     <div className={cn(
                         "p-4 rounded-2xl bg-background border border-border shadow-2xl relative z-10",

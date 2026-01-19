@@ -9,6 +9,7 @@ export function Registry() {
 
     useEffect(() => {
         const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+        console.log("Fetching anchors from:", apiBase); // DEBUG
         fetch(`${apiBase}/anchors`)
             .then(res => res.json())
             .then(data => {
