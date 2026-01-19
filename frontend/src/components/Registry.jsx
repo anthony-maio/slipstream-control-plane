@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Search, Database } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 
 export function Registry() {
     const [anchors, setAnchors] = useState([]);

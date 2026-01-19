@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Metrics } from './components/Metrics';
-import { TrafficLog } from './components/TrafficLog';
-import { NetworkGraph } from './components/NetworkGraph';
-import { Registry } from './components/Registry';
-import { Resources } from './components/Resources';
-import { Autotuner } from './components/Autotuner';
-import { Activity, Radio, Layers, LayoutDashboard, Database, BookOpen } from 'lucide-react';
-import { cn } from './lib/utils';
+import { Metrics } from './components/Metrics.jsx';
+import { TrafficLog } from './components/TrafficLog.jsx';
+import { NetworkGraph } from './components/NetworkGraph.jsx';
+import { Registry } from './components/Registry.jsx';
+import { Resources } from './components/Resources.jsx';
+import { Autotuner } from './components/Autotuner.jsx';
+import { Layers, LayoutDashboard, Database, BookOpen } from 'lucide-react';
+import { cn } from './lib/utils.js';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -64,8 +64,8 @@ function App() {
     // Connect to WebSocket
     const connect = () => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = import.meta.env.VITE_WS_URL || `${protocol}//${window.location.host}/ws/hub`;
-      ws.current = new WebSocket(wsUrl);
+      const hubPath = import.meta.env.VITE_WS_URL || `${protocol}//${window.location.host}/ws/hub`;
+      ws.current = new WebSocket(hubPath);
 
       ws.current.onopen = () => {
         setIsConnected(true);

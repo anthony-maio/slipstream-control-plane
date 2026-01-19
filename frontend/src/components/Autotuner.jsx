@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Sparkles, Check, X } from 'lucide-react';
-import { cn } from '../lib/utils'; // Assuming this exists or I should use clsx/tailwind-merge
+import { cn } from '../lib/utils.js'; // Assuming this exists or I should use clsx/tailwind-merge
 
 export function Autotuner({ proposals, onApprove }) {
     if (proposals.length === 0) return null;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Server, Database, Brain, Globe, Laptop, Bot, User } from 'lucide-react';
-import { cn } from '../lib/utils';;
+import { cn } from '../lib/utils.js';;
 
 // Icon mapping (Fallback to Bot if unknown)
 const ICONS = {
