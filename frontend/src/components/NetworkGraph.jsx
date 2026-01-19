@@ -94,7 +94,7 @@ export function NetworkGraph({ messages }) {
     }, [messages, layout]);
 
     return (
-        <div className="w-full h-[500px] bg-card/50 border border-border rounded-2xl relative overflow-hidden mb-8 backdrop-blur-sm shadow-xl">
+        <div className="w-full h-[400px] bg-card/50 border border-border rounded-2xl relative overflow-hidden backdrop-blur-sm shadow-xl">
             <div className="absolute inset-0 bg-grid-white/[0.02]" />
 
             <svg className="w-full h-full" viewBox="0 0 800 500">

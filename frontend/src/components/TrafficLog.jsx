@@ -4,7 +4,7 @@ import { ArrowRight, Box, Cpu, Zap, TrendingDown } from 'lucide-react';
 
 export function TrafficLog({ messages, mode }) {
     return (
-        <div className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden flex flex-col h-[600px]">
+        <div className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden flex flex-col h-[400px]">
             <div className="p-4 border-b border-border bg-background/50 backdrop-blur sticky top-0 z-10 flex justify-between items-center">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
                     <Cpu className="text-blue-500" size={18} />

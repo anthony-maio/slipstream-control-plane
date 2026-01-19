@@ -165,11 +165,11 @@ function App() {
             {/* Metrics */}
             <Metrics stats={finalStats} />
 
-            {/* Network Graph */}
-            <NetworkGraph messages={messages} />
-
-            {/* Main Content */}
-            <TrafficLog messages={messages} mode={mode} />
+            {/* Side-by-side: Network Graph + Traffic Log */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <NetworkGraph messages={messages} />
+              <TrafficLog messages={messages} mode={mode} />
+            </div>
           </>
         ) : view === 'registry' ? (
           <Registry />
@@ -181,9 +181,16 @@ function App() {
         <Autotuner
           proposals={proposals}
           onApprove={(id) => {
+            const latestProposal = proposals[proposals.length - 1];
             if (!id) {
-              // Dismiss
-              setProposals(prev => prev.filter(p => p.id !== proposals[proposals.length - 1]?.id));
+              // Dismiss - send to backend so it stops re-proposing
+              if (latestProposal && ws.current && ws.current.readyState === WebSocket.OPEN) {
+                ws.current.send(JSON.stringify({
+                  type: 'dismiss_anchor',
+                  mnemonic: latestProposal.mnemonic
+                }));
+              }
+              setProposals(prev => prev.filter(p => p.id !== latestProposal?.id));
               return;
             }
             const p = proposals.find(p => p.id === id);

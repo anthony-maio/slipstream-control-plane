@@ -14,6 +14,17 @@ logger = logging.getLogger("slipstream-control-plane")
 
 # State for Simulation Interactivity
 APPROVED_ANCHORS = set()
+DISMISSED_ANCHORS = set()  # Anchors the user has explicitly dismissed
+
+# Fallback anchors if slipcore fails to load
+FALLBACK_ANCHORS = [
+    {"mnemonic": "1", "definition": "Initiate a code review process"},
+    {"mnemonic": "2", "definition": "Execute a test suite"},
+    {"mnemonic": "3", "definition": "Deploy to staging environment"},
+    {"mnemonic": "16", "definition": "Rollback to previous version"},
+    {"mnemonic": "17", "definition": "Approve pull request"},
+    {"mnemonic": "CHECK-POLICY-2FA", "definition": "Verify compliance with Multi-Factor Authentication policy"},
+]
 
 app = FastAPI(title="Slipstream Control Plane")
 
@@ -64,15 +75,19 @@ async def get_anchors():
     """Returns the full Universal Concept Registry (UCR)."""
     try:
         ucr = get_default_ucr()
-        # Serialize UCR anchors to a list of dicts
-        return [
+        anchors = [
             {"mnemonic": m, "definition": a.definition} 
             for m, a in ucr.anchors.items()
         ]
+        if len(anchors) > 0:
+            return anchors
+        # If UCR is empty, return fallback
+        logger.warning("UCR returned empty, using fallback anchors")
+        return FALLBACK_ANCHORS
     except Exception as e:
         logger.error(f"Failed to fetch anchors: {e}")
-        # Return empty list or error object instead of crashing
-        return []
+        # Return fallback anchors instead of empty
+        return FALLBACK_ANCHORS
 
 @app.websocket("/ws/hub")
 async def websocket_endpoint(websocket: WebSocket):
@@ -105,6 +120,13 @@ async def websocket_endpoint(websocket: WebSocket):
                             "type": "system_notification",
                             "message": f"Anchor '{mnemonic}' optimized and deployed."
                         })
+                
+                # Handle Anchor Dismissal
+                if parsed.get("type") == "dismiss_anchor":
+                    mnemonic = parsed.get("mnemonic")
+                    if mnemonic:
+                        logger.info(f"Anchor dismissed: {mnemonic}")
+                        DISMISSED_ANCHORS.add(mnemonic)
                 
                 await manager.broadcast(parsed)
             except json.JSONDecodeError:
@@ -198,17 +220,21 @@ async def generate_traffic():
         
         await manager.broadcast(message_data)
         
-        # 3. Autotuner: If fallback, propose a new anchor
-        if scenario.get("slip_type") == "fallback" and "proposed_anchor" in scenario:
-            await asyncio.sleep(0.5) # Slight delay for dramatic effect
-            proposal = {
-                "type": "proposal",
-                "id": str(random.randint(10000, 99999)),
-                "trigger_msg_id": message_data["id"],
-                "mnemonic": scenario["proposed_anchor"]["mnemonic"],
-                "definition": scenario["proposed_anchor"]["definition"]
-            }
-            await manager.broadcast(proposal)
+        # 3. Autotuner: If fallback, propose a new anchor (unless already handled)
+        proposed = scenario.get("proposed_anchor")
+        if scenario.get("slip_type") == "fallback" and proposed:
+            mnemonic = proposed["mnemonic"]
+            # Only propose if not already approved or dismissed
+            if mnemonic not in APPROVED_ANCHORS and mnemonic not in DISMISSED_ANCHORS:
+                await asyncio.sleep(0.5) # Slight delay for dramatic effect
+                proposal = {
+                    "type": "proposal",
+                    "id": str(random.randint(10000, 99999)),
+                    "trigger_msg_id": message_data["id"],
+                    "mnemonic": mnemonic,
+                    "definition": proposed["definition"]
+                }
+                await manager.broadcast(proposal)
 
         # Loop script
         script_index = (script_index + 1) % len(SCRIPT)
