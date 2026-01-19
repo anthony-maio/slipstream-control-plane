@@ -1,4 +1,4 @@
-import { TrendingDown, Zap, DollarSign, Clock, AlertTriangle, Wrench } from 'lucide-react';
+import { TrendingUp, TrendingDown, Zap, DollarSign, Clock, AlertTriangle, RefreshCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function Metrics({ stats }) {
@@ -6,83 +6,98 @@ export function Metrics({ stats }) {
         {
             label: "Avg Token Reduction",
             value: `${stats.avgSavings.toFixed(1)}%`,
-            icon: TrendingDown,
-            color: "text-green-400",
-            sub: "vs JSON payload"
+            icon: TrendingUp,
+            iconBg: "bg-emerald-500/20",
+            iconColor: "text-emerald-400",
+            trend: "up",
+            sub: "Last 24h"
         },
         {
             label: "Total Tokens Saved",
             value: stats.totalSavedTokens.toLocaleString(),
             icon: Zap,
-            color: "text-amber-400",
-            sub: "cumulative"
+            iconBg: "bg-cyan-500/20",
+            iconColor: "text-cyan-400",
+            trend: "up",
+            sub: "Last 24h"
         },
         {
             label: "Est. Cost Savings",
-            value: `$${(stats.totalSavedTokens * 0.00001).toFixed(4)}`, // ~$10/1M blended assumption
+            value: `$${(stats.totalSavedTokens * 0.00001).toFixed(2)}`,
             icon: DollarSign,
-            color: "text-blue-400",
-            sub: "@ Gemini 3 pricing"
+            iconBg: "bg-green-500/20",
+            iconColor: "text-green-400",
+            trend: "up",
+            sub: "Last 24h"
         },
-        // Advanced Metrics
         {
             label: "Avg Latency",
-            value: `${stats.avgLatency.toFixed(0)} ms`,
+            value: `${stats.avgLatency.toFixed(0)}ms`,
             icon: Clock,
-            color: "text-violet-400",
-            sub: "network time",
-            tooltip: "Average round-trip time for message delivery across the semantic swarm network."
+            iconBg: "bg-blue-500/20",
+            iconColor: "text-blue-400",
+            trend: "neutral",
+            sub: "Last 24h"
         },
         {
             label: "Disagreement Rate",
             value: `${stats.disagreementRate.toFixed(1)}%`,
             icon: AlertTriangle,
-            color: "text-red-400",
-            sub: "consensus failures",
-            tooltip: "Percentage of agent interactions that resulted in a conflict, rollback, or rejection requiring mediation."
+            iconBg: "bg-amber-500/20",
+            iconColor: "text-amber-400",
+            trend: "down",
+            sub: "Last 24h"
         },
         {
             label: "Avg Recovery Time",
             value: `${(stats.avgRecoveryTime / 1000).toFixed(1)}s`,
-            icon: Wrench,
-            color: "text-orange-400",
-            sub: "self-correction speed",
-            tooltip: "Mean time taken by the swarm to autonomously resolve state conflicts or fix errors without human intervention."
+            icon: RefreshCcw,
+            iconBg: "bg-violet-500/20",
+            iconColor: "text-violet-400",
+            trend: "neutral",
+            sub: "Last 24h"
         }
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
             {cards.map((card, idx) => (
                 <motion.div
                     key={card.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-card border border-border p-6 rounded-2xl shadow-lg hover:shadow-primary/5 transition-shadow relative group cursor-help"
+                    transition={{ delay: idx * 0.05 }}
+                    className="metric-card glass-card p-4 rounded-xl relative group"
                 >
-                    {/* Tooltip */}
-                    {card.tooltip && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-black/90 border border-white/10 rounded-lg text-[10px] text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                            {card.tooltip}
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-black/90" />
+                    <div className="flex items-start justify-between mb-3">
+                        <div className={`p-2.5 rounded-lg ${card.iconBg}`}>
+                            <card.icon size={18} className={card.iconColor} />
                         </div>
-                    )}
-
-                    <div className="flex justify-between items-start mb-4">
-                        <div>
-                            <p className="text-secondary text-sm font-medium">{card.label}</p>
-                            <h3 className="text-3xl font-bold text-foreground mt-1">{card.value}</h3>
-                        </div>
-                        <div className={`p-3 rounded-xl bg-background/50 ${card.color}`}>
-                            <card.icon size={24} />
-                        </div>
+                        <TrendIndicator trend={card.trend} />
                     </div>
-                    <div className="text-xs text-secondary/60 font-mono">
-                        {card.sub}
-                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-1">{card.value}</h3>
+                    <p className="text-secondary text-xs font-medium">{card.label}</p>
+                    <p className="text-secondary/50 text-[10px] mt-1">{card.sub}</p>
                 </motion.div>
             ))}
         </div>
     );
+}
+
+function TrendIndicator({ trend }) {
+    if (trend === 'up') {
+        return (
+            <div className="flex items-center gap-1 text-emerald-400">
+                <TrendingUp size={14} />
+            </div>
+        );
+    }
+    if (trend === 'down') {
+        return (
+            <div className="flex items-center gap-1 text-amber-400">
+                <TrendingDown size={14} />
+            </div>
+        );
+    }
+    return null;
 }

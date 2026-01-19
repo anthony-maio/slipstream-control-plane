@@ -18,3 +18,55 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-border rounded-full hover:bg-secondary/50 transition-colors;
 }
+
+/* Gradient background glow effects */
+.bg-glow-top {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 70% 10%, rgba(99, 102, 241, 0.1), transparent);
+}
+
+/* Animated gradient border */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animated-border {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6);
+  background-size: 300% 100%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Glass card effect */
+.glass-card {
+  background: rgba(24, 24, 27, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Network graph orbital rings */
+.orbital-ring {
+  border: 1px solid rgba(56, 189, 248, 0.1);
+  box-shadow:
+    0 0 20px rgba(56, 189, 248, 0.05),
+    inset 0 0 20px rgba(56, 189, 248, 0.02);
+}
+
+/* Metric card hover glow */
+.metric-card {
+  transition: all 0.3s ease;
+}
+.metric-card:hover {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Toggle switch styling */
+.toggle-switch {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.toggle-switch.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
