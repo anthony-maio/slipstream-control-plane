@@ -2,7 +2,7 @@
 
 The **Slipstream Control Plane** is a real-time observability and management dashboard for the Slipstream semantic quantization protocol. It provides a visual layer for monitoring agent-to-agent communication, token efficiency, and protocol health.
 
-![Slipstream UI Mockup](https://raw.githubusercontent.com/anthony-maio/slipstream-control-plane/main/docs/dashboard_preview.png)
+![Slipstream UI Mockup](https://raw.githubusercontent.com/anthony-maio/slipstream-control-plane/main/demo.png)
 *(Replace with your actual screenshot link after uploading to GitHub)*
 
 ## 🚀 Overview
