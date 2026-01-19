@@ -1,8 +1,12 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Metrics } from './components/Metrics';
+import { TrafficLog } from './components/TrafficLog';
 import { NetworkGraph } from './components/NetworkGraph';
 import { Registry } from './components/Registry';
 import { Resources } from './components/Resources';
+import { Autotuner } from './components/Autotuner';
 import { Activity, Radio, Layers, LayoutDashboard, Database, BookOpen } from 'lucide-react';
-import { cn } from './lib/utils';;
+import { cn } from './lib/utils';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -12,9 +16,83 @@ function App() {
   const [isConnected, setIsConnected] = useState(false);
   const ws = useRef(null);
 
-  // ... (Stats calculation code remains same) ...
+  // Computed Stats
+  const stats = messages.reduce((acc, msg) => {
+    if (msg.type === 'traffic') {
+      acc.totalJsonTokens += msg.metrics.json_tokens;
+      acc.totalSlipTokens += msg.metrics.slip_tokens;
 
-  // ... (useEffect / WebSocket code remains same) ...
+      // Advanced Metrics
+      if (msg.advanced) {
+        acc.latencySum += msg.advanced.latency_ms;
+        if (msg.advanced.status === 'disagreement') acc.disagreementCount += 1;
+        if (msg.advanced.status === 'recovery') {
+          acc.recoverySum += msg.advanced.recovery_time_ms;
+          acc.recoveryCount += 1;
+        }
+      }
+
+      acc.count += 1;
+    }
+    return acc;
+  }, {
+    totalJsonTokens: 0,
+    totalSlipTokens: 0,
+    count: 0,
+    latencySum: 0,
+    disagreementCount: 0,
+    recoverySum: 0,
+    recoveryCount: 0
+  });
+
+  const totalSavedTokens = stats.totalJsonTokens - stats.totalSlipTokens;
+  const avgSavings = stats.count > 0 ? (totalSavedTokens / stats.totalJsonTokens) * 100 : 0;
+
+  const avgLatency = stats.count > 0 ? stats.latencySum / stats.count : 0;
+  const disagreementRate = stats.count > 0 ? (stats.disagreementCount / stats.count) * 100 : 0;
+  const avgRecoveryTime = stats.recoveryCount > 0 ? stats.recoverySum / stats.recoveryCount : 0;
+
+  const finalStats = {
+    totalSavedTokens,
+    avgSavings,
+    avgLatency,
+    disagreementRate,
+    avgRecoveryTime
+  };
+
+  useEffect(() => {
+    // Connect to WebSocket
+    const connect = () => {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = import.meta.env.VITE_WS_URL || `${protocol}//${window.location.host}/ws/hub`;
+      ws.current = new WebSocket(wsUrl);
+
+      ws.current.onopen = () => {
+        setIsConnected(true);
+        console.log("Connected to Control Plane");
+      };
+
+      ws.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'history_sync') {
+          setMessages(data.messages.filter(m => m.type === 'traffic'));
+          setProposals(data.messages.filter(m => m.type === 'proposal'));
+        } else if (data.type === 'traffic') {
+          setMessages(prev => [...prev, data]);
+        } else if (data.type === 'proposal') {
+          setProposals(prev => [...prev, data]);
+        }
+      };
+
+      ws.current.onclose = () => {
+        setIsConnected(false);
+        setTimeout(connect, 3000); // Reconnect
+      };
+    };
+
+    connect();
+    return () => ws.current?.close();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground p-8 font-sans selection:bg-primary/30">
@@ -60,6 +138,11 @@ function App() {
             {/* Mode Toggles */}
             <ModeToggle value="json" current={mode} onClick={setMode} label="Verbose (JSON)" />
             <ModeToggle value="slipstream" current={mode} onClick={setMode} label="Slipstream (Quantized)" />
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-secondary">
+            <div className={cn("w-2 h-2 rounded-full", isConnected ? "bg-green-500 animate-pulse" : "bg-red-500")} />
+            {isConnected ? "SYSTEM ACTIVE" : "DISCONNECTED"}
           </div>
         </header>
 
