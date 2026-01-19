@@ -43,17 +43,19 @@ export function NetworkGraph({ messages }) {
     const layout = useMemo(() => {
         const nodeList = Array.from(nodes);
         const count = nodeList.length;
-        const radius = 180; // Distance from center
-        const centerX = 400; // SVG Width / 2 (approx 800 width container?)
-        const centerY = 250; // SVG Height / 2
 
         const positions = {};
 
         nodeList.forEach((node, index) => {
             const angle = (index / count) * 2 * Math.PI - (Math.PI / 2); // Start at top
+
+            // Calculate relative to center (0.5, 0.5) with radius 0.35 (35%)
+            const relX = 0.5 + 0.35 * Math.cos(angle);
+            const relY = 0.5 + 0.35 * Math.sin(angle);
+
             positions[node] = {
-                x: centerX + radius * Math.cos(angle),
-                y: centerY + radius * Math.sin(angle),
+                left: `${relX * 100}%`,
+                top: `${relY * 100}%`,
                 icon: ICONS[node] || Bot,
                 color: COLORS[node] || "text-gray-400"
             };
@@ -147,9 +149,8 @@ export function NetworkGraph({ messages }) {
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                     className="absolute flex flex-col items-center gap-2"
-                    style={{ left: config.x, top: config.y, transform: 'translate(-50%, -50%)' }}
+                    style={{ left: config.left, top: config.top, transform: 'translate(-50%, -50%)' }}
                 >
                     <div className={cn(
                         "p-4 rounded-2xl bg-background border border-border shadow-2xl relative z-10",
@@ -165,14 +166,15 @@ export function NetworkGraph({ messages }) {
             ))}
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 flex gap-4 text-xs font-mono text-secondary">
+            <div className="absolute bottom-4 left-4 flex flex-col gap-2 p-3 bg-black/40 backdrop-blur-md rounded-xl border border-white/5 text-xs font-mono text-secondary">
+                <div className="font-bold text-white mb-1">Traffic Types</div>
                 <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-                    <span>Slipstream</span>
+                    <span><strong className="text-indigo-400">Slipstream</strong> (Quantized/Compressed)</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-sm bg-amber-500 opacity-80" />
-                    <span>Legacy JSON</span>
+                    <span><strong className="text-amber-400">Legacy JSON</strong> (Verbose/Heavy)</span>
                 </div>
             </div>
 

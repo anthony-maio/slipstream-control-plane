@@ -43,32 +43,36 @@ export function TrafficLog({ messages, mode }) {
                                         "{msg.thought}"
                                     </div>
 
-                                    {/* Wire Format Comparison */}
-                                    {/* JSON View */}
-                                    <div className="p-3 rounded-lg bg-black/40 border border-border font-mono text-xs overflow-x-auto ring-1 ring-white/5">
-                                        <div className="text-secondary mb-1 flex justify-between">
-                                            <span className="font-bold text-red-400">JSON Payload</span>
-                                            <span className="text-secondary/60">{msg.metrics.json_tokens} tokens</span>
+                                    {/* Wire Format Comparison - Controlled by Mode */}
+                                    {mode === 'json' ? (
+                                        /* JSON View */
+                                        <div className="p-3 rounded-lg bg-black/40 border border-border font-mono text-xs overflow-x-auto ring-1 ring-white/5 animate-in fade-in slide-in-from-left-4 duration-300">
+                                            <div className="text-secondary mb-1 flex justify-between">
+                                                <span className="font-bold text-red-400 flex items-center gap-2">
+                                                    <Box size={14} /> Raw JSON
+                                                </span>
+                                                <span className="text-secondary/60">{msg.metrics.json_tokens} tokens</span>
+                                            </div>
+                                            <pre className="text-secondary/80 whitespace-pre-wrap break-all opacity-80 hover:opacity-100 transition-opacity">
+                                                {msg.json_equiv}
+                                            </pre>
                                         </div>
-                                        <pre className="text-secondary/80 whitespace-pre-wrap break-all">
-                                            {msg.json_equiv}
-                                        </pre>
-                                    </div>
-
-                                    {/* Slipstream View */}
-                                    <div className="p-3 rounded-lg bg-blue-950/20 border border-blue-900/50 font-mono text-xs overflow-x-auto ring-1 ring-blue-500/20">
-                                        <div className="text-blue-400 mb-1 flex justify-between">
-                                            <span className="flex items-center gap-1.5 font-bold"><ZapIcon /> Slipstream</span>
-                                            <span className="text-blue-200">{msg.metrics.slip_tokens} tokens</span>
+                                    ) : (
+                                        /* Slipstream View */
+                                        <div className="p-3 rounded-lg bg-blue-950/20 border border-blue-900/50 font-mono text-xs overflow-x-auto ring-1 ring-blue-500/20 animate-in fade-in slide-in-from-right-4 duration-300">
+                                            <div className="text-blue-400 mb-1 flex justify-between">
+                                                <span className="flex items-center gap-1.5 font-bold"><ZapIcon /> Slipstream Quantized</span>
+                                                <span className="text-blue-200">{msg.metrics.slip_tokens} tokens</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="bg-blue-600/20 text-blue-300 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider border border-blue-500/30">Anchor</span>
+                                                <span className="text-blue-200 font-bold text-sm tracking-wide">{msg.anchor}</span>
+                                            </div>
+                                            <div className="text-blue-100/80 whitespace-pre-wrap break-all">
+                                                {msg.slip_wire}
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className="bg-blue-600/20 text-blue-300 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider border border-blue-500/30">Anchor</span>
-                                            <span className="text-blue-200 font-bold text-sm tracking-wide">{msg.anchor}</span>
-                                        </div>
-                                        <div className="text-blue-100/80 whitespace-pre-wrap break-all">
-                                            {msg.slip_wire}
-                                        </div>
-                                    </div>
+                                    )}
 
                                     {/* Savings Badge */}
                                     <div className="flex justify-end">

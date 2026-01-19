@@ -21,6 +21,11 @@ export function Resources({ onNavigate }) {
                         See it in Action
                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </button>
+                    <div className="mt-4 flex gap-4 text-sm text-indigo-300/80">
+                        <span className="flex items-center gap-1">✨ GPT-5 Ready</span>
+                        <span className="flex items-center gap-1">🔒 Enterprise Security</span>
+                        <span className="flex items-center gap-1">🚀 < 100ms Latency</span>
+                    </div>
                 </div>
             </div>
 

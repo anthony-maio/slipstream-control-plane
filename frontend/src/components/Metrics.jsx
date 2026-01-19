@@ -19,10 +19,10 @@ export function Metrics({ stats }) {
         },
         {
             label: "Est. Cost Savings",
-            value: `$${(stats.totalSavedTokens * 0.000005).toFixed(4)}`, // $5/1M assumption
+            value: `$${(stats.totalSavedTokens * 0.00001).toFixed(4)}`, // ~$10/1M blended assumption
             icon: DollarSign,
             color: "text-blue-400",
-            sub: "@ GPT-4o pricing"
+            sub: "@ GPT-5 pricing"
         },
         // Advanced Metrics
         {
@@ -30,21 +30,24 @@ export function Metrics({ stats }) {
             value: `${stats.avgLatency.toFixed(0)} ms`,
             icon: Clock,
             color: "text-violet-400",
-            sub: "network time"
+            sub: "network time",
+            tooltip: "Average round-trip time for message delivery across the semantic swarm network."
         },
         {
             label: "Disagreement Rate",
             value: `${stats.disagreementRate.toFixed(1)}%`,
             icon: AlertTriangle,
             color: "text-red-400",
-            sub: "consensus failures"
+            sub: "consensus failures",
+            tooltip: "Percentage of agent interactions that resulted in a conflict, rollback, or rejection requiring mediation."
         },
         {
             label: "Avg Recovery Time",
             value: `${(stats.avgRecoveryTime / 1000).toFixed(1)}s`,
             icon: Wrench,
             color: "text-orange-400",
-            sub: "self-correction speed"
+            sub: "self-correction speed",
+            tooltip: "Mean time taken by the swarm to autonomously resolve state conflicts or fix errors without human intervention."
         }
     ];
 
@@ -56,8 +59,16 @@ export function Metrics({ stats }) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="bg-card border border-border p-6 rounded-2xl shadow-lg hover:shadow-primary/5 transition-shadow"
+                    className="bg-card border border-border p-6 rounded-2xl shadow-lg hover:shadow-primary/5 transition-shadow relative group cursor-help"
                 >
+                    {/* Tooltip */}
+                    {card.tooltip && (
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-black/90 border border-white/10 rounded-lg text-[10px] text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                            {card.tooltip}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-black/90" />
+                        </div>
+                    )}
+
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <p className="text-secondary text-sm font-medium">{card.label}</p>

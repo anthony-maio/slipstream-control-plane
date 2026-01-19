@@ -138,8 +138,20 @@ function App() {
 
           <div className="flex items-center gap-4 bg-card p-1.5 rounded-full border border-border shadow-sm">
             {/* Mode Toggles */}
-            <ModeToggle value="json" current={mode} onClick={setMode} label="Verbose (JSON)" />
-            <ModeToggle value="slipstream" current={mode} onClick={setMode} label="Slipstream (Quantized)" />
+            <ModeToggle
+              value="json"
+              current={mode}
+              onClick={setMode}
+              label="Verbose (JSON)"
+              tooltip="Monitor raw, uncompressed traffic. Identify redundant data patterns manually."
+            />
+            <ModeToggle
+              value="slipstream"
+              current={mode}
+              onClick={setMode}
+              label="Slipstream (Quantized)"
+              tooltip="View semantic anchors and compressed token streams. Observe bandwidth savings in real-time."
+            />
           </div>
 
           <div className="flex items-center gap-2 text-xs font-mono text-secondary">
@@ -191,20 +203,27 @@ function App() {
   );
 }
 
-function ModeToggle({ value, current, onClick, label }) {
+function ModeToggle({ value, current, onClick, label, tooltip }) {
   const isActive = value === current;
   return (
-    <button
-      onClick={() => onClick(value)}
-      className={cn(
-        "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
-        isActive
-          ? "bg-primary text-white shadow-md"
-          : "text-secondary hover:text-foreground hover:bg-white/5"
-      )}
-    >
-      {label}
-    </button>
+    <div className="relative group">
+      <button
+        onClick={() => onClick(value)}
+        className={cn(
+          "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
+          isActive
+            ? "bg-primary text-white shadow-md scale-105"
+            : "text-secondary hover:text-foreground hover:bg-white/5"
+        )}
+      >
+        {label}
+      </button>
+      {/* Tooltip */}
+      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 p-2 bg-black/90 border border-white/10 rounded-lg text-[10px] text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+        {tooltip}
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-black/90" />
+      </div>
+    </div>
   );
 }
 
