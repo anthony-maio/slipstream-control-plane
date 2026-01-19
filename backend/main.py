@@ -120,7 +120,16 @@ async def generate_traffic():
             anchor_name = decoded.anchor.mnemonic
             slip_tokens = len(slip_wire.split())
 
-        # 2. Calculate Savings
+        # 2. Determine Status based on narrative keywords for better demonstration
+        thought_lower = scenario["thought"].lower()
+        if "critical" in thought_lower or "reject" in thought_lower or "regression" in thought_lower:
+            status = "disagreement"
+        elif "recovery" in thought_lower or "rollback" in thought_lower or "refactoring" in thought_lower:
+            status = "recovery"
+        else:
+            status = "success"
+
+        # 3. Calculate Savings
         json_str = json.dumps(scenario["json_equiv"])
         json_tokens = len(json_str) / 4
         
@@ -141,8 +150,8 @@ async def generate_traffic():
             },
             "advanced": {
                 "latency_ms": random.randint(150, 800) if scenario.get("slip_type") == "fallback" else random.randint(20, 150),
-                "status": random.choices(["success", "disagreement", "recovery"], weights=[0.9, 0.05, 0.05])[0],
-                "recovery_time_ms": random.randint(1000, 5000)
+                "status": status,
+                "recovery_time_ms": random.randint(1000, 5000) if status == "recovery" else 0
             }
         }
         
@@ -173,4 +182,6 @@ async def startup_event():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
