@@ -5,8 +5,38 @@ import { NetworkGraph } from './components/NetworkGraph.jsx';
 import { Registry } from './components/Registry.jsx';
 import { Resources } from './components/Resources.jsx';
 import { Autotuner } from './components/Autotuner.jsx';
-import { Layers, LayoutDashboard, Database, BookOpen } from 'lucide-react';
+import { Database, BookOpen, Home } from 'lucide-react';
 import { cn } from './lib/utils.js';
+
+// Custom Slipstream wave logo
+function SlipstreamLogo({ className }) {
+  return (
+    <svg viewBox="0 0 40 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#38bdf8" />
+          <stop offset="50%" stopColor="#6366f1" />
+          <stop offset="100%" stopColor="#8b5cf6" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M8 28C12 28 14 20 20 20C26 20 28 28 32 28"
+        stroke="url(#logoGradient)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M8 20C12 20 14 12 20 12C26 12 28 20 32 20"
+        stroke="url(#logoGradient)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.6"
+      />
+    </svg>
+  );
+}
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -97,85 +127,104 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-8 font-sans selection:bg-primary/30">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30 bg-glow-top">
+      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6 flex flex-col min-h-screen">
 
         {/* Header */}
-        <header className="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-border">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-900/20">
-              <Layers className="text-white" size={24} />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+        <header className="flex flex-col lg:flex-row justify-between items-center gap-4">
+          {/* Logo & Title */}
+          <div className="flex items-center gap-3">
+            <SlipstreamLogo className="w-10 h-10" />
+            <h1 className="text-2xl font-bold tracking-tight">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400">
                 Slipstream
-                <span className="text-blue-500 text-sm align-top ml-2 font-mono bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">v2.4</span>
-              </h1>
-              <p className="text-secondary font-medium">Semantic Control Plane</p>
-            </div>
+              </span>
+              <span className="text-foreground ml-1">Control Plane</span>
+              <span className="text-xs align-top ml-2 font-mono text-secondary bg-card px-2 py-0.5 rounded border border-border">v2.4</span>
+            </h1>
           </div>
 
-          <div className="flex items-center bg-card p-1 rounded-lg border border-border">
+          {/* Navigation Tabs */}
+          <nav className="flex items-center gap-1 bg-card/50 p-1 rounded-lg border border-border/50 backdrop-blur">
             <button
               onClick={() => setView('dashboard')}
-              className={cn("px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors", view === 'dashboard' ? "bg-primary text-white" : "text-secondary hover:text-white")}
+              className={cn(
+                "px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-all",
+                view === 'dashboard'
+                  ? "bg-primary/20 text-primary border border-primary/30"
+                  : "text-secondary hover:text-foreground hover:bg-card"
+              )}
             >
-              <LayoutDashboard size={16} /> Dashboard
+              <Home size={16} /> Dashboard
             </button>
             <button
               onClick={() => setView('registry')}
-              className={cn("px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors", view === 'registry' ? "bg-primary text-white" : "text-secondary hover:text-white")}
+              className={cn(
+                "px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-all",
+                view === 'registry'
+                  ? "bg-primary/20 text-primary border border-primary/30"
+                  : "text-secondary hover:text-foreground hover:bg-card"
+              )}
             >
               <Database size={16} /> Registry
             </button>
             <button
               onClick={() => setView('resources')}
-              className={cn("px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors", view === 'resources' ? "bg-primary text-white" : "text-secondary hover:text-white")}
+              className={cn(
+                "px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-all",
+                view === 'resources'
+                  ? "bg-primary/20 text-primary border border-primary/30"
+                  : "text-secondary hover:text-foreground hover:bg-card"
+              )}
             >
               <BookOpen size={16} /> Resources
             </button>
-          </div>
+          </nav>
 
-          <div className="flex items-center gap-4 bg-card p-1.5 rounded-full border border-border shadow-sm">
-            {/* Mode Toggles */}
-            <ModeToggle
-              value="json"
-              current={mode}
-              onClick={setMode}
-              label="Verbose (JSON)"
-              tooltip="Monitor raw, uncompressed traffic. Identify redundant data patterns manually."
-            />
-            <ModeToggle
-              value="slipstream"
-              current={mode}
-              onClick={setMode}
-              label="Slipstream (Quantized)"
-              tooltip="View semantic anchors and compressed token streams. Observe bandwidth savings in real-time."
-            />
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono text-secondary">
-            <div className={cn("w-2 h-2 rounded-full", isConnected ? "bg-green-500 animate-pulse" : "bg-red-500")} />
-            {isConnected ? "SYSTEM ACTIVE" : "DISCONNECTED"}
+          {/* Mode Toggle Switch */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-secondary font-medium">Slipstream (Quantized)</span>
+            <button
+              onClick={() => setMode(mode === 'slipstream' ? 'json' : 'slipstream')}
+              className={cn(
+                "relative w-14 h-7 rounded-full transition-all duration-300",
+                mode === 'slipstream'
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-500"
+                  : "bg-card border border-border"
+              )}
+            >
+              <div
+                className={cn(
+                  "absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300",
+                  mode === 'slipstream' ? "left-8" : "left-1"
+                )}
+              />
+            </button>
           </div>
         </header>
 
-        {view === 'dashboard' ? (
-          <>
-            {/* Metrics */}
-            <Metrics stats={finalStats} />
+        <main className="flex-1">
+          {view === 'dashboard' ? (
+            <>
+              {/* Metrics */}
+              <Metrics stats={finalStats} />
 
-            {/* Side-by-side: Network Graph + Traffic Log */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <NetworkGraph messages={messages} />
-              <TrafficLog messages={messages} mode={mode} />
-            </div>
-          </>
-        ) : view === 'registry' ? (
-          <Registry />
-        ) : (
-          <Resources onNavigate={setView} />
-        )}
+              {/* Side-by-side: Network Graph + Traffic Log */}
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <div className="lg:col-span-3">
+                  <NetworkGraph messages={messages} />
+                </div>
+                <div className="lg:col-span-2">
+                  <TrafficLog messages={messages} mode={mode} />
+                </div>
+              </div>
+            </>
+          ) : view === 'registry' ? (
+            <Registry />
+          ) : (
+            <Resources onNavigate={setView} />
+          )}
+        </main>
 
         {/* Autotuner Overlay (Always active) */}
         <Autotuner
@@ -217,30 +266,26 @@ function App() {
           </div>
         )}
 
-      </div>
-    </div>
-  );
-}
+        {/* Footer */}
+        <footer className="mt-auto pt-8 pb-4 border-t border-border/30">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-secondary">
+            <div className="flex items-center gap-6">
+              <a href="#" className="hover:text-foreground transition-colors">Documentation</a>
+              <span className="text-border">•</span>
+              <a href="#" className="hover:text-foreground transition-colors">API Reference</a>
+              <span className="text-border">•</span>
+              <a href="#" className="hover:text-foreground transition-colors">Support</a>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={cn("w-2 h-2 rounded-full", isConnected ? "bg-green-500 animate-pulse" : "bg-red-500")} />
+              <span className="font-mono">{isConnected ? "SYSTEM ACTIVE" : "DISCONNECTED"}</span>
+            </div>
+            <p className="text-secondary/60">
+              Copyright © {new Date().getFullYear()}. All rights reserved.
+            </p>
+          </div>
+        </footer>
 
-function ModeToggle({ value, current, onClick, label, tooltip }) {
-  const isActive = value === current;
-  return (
-    <div className="relative group">
-      <button
-        onClick={() => onClick(value)}
-        className={cn(
-          "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
-          isActive
-            ? "bg-primary text-white shadow-md scale-105"
-            : "text-secondary hover:text-foreground hover:bg-white/5"
-        )}
-      >
-        {label}
-      </button>
-      {/* Tooltip */}
-      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 p-2 bg-black/90 border border-white/10 rounded-lg text-[10px] text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-        {tooltip}
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-black/90" />
       </div>
     </div>
   );
