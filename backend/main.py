@@ -16,14 +16,65 @@ logger = logging.getLogger("slipstream-control-plane")
 APPROVED_ANCHORS = set()
 DISMISSED_ANCHORS = set()  # Anchors the user has explicitly dismissed
 
-# Fallback anchors if slipcore fails to load
+# Real UCR anchors from slipcore (fallback if slipcore fails to load on Railway)
 FALLBACK_ANCHORS = [
-    {"mnemonic": "1", "definition": "Initiate a code review process"},
-    {"mnemonic": "2", "definition": "Execute a test suite"},
-    {"mnemonic": "3", "definition": "Deploy to staging environment"},
-    {"mnemonic": "16", "definition": "Rollback to previous version"},
-    {"mnemonic": "17", "definition": "Approve pull request"},
-    {"mnemonic": "CHECK-POLICY-2FA", "definition": "Verify compliance with Multi-Factor Authentication policy"},
+    # Observations
+    {"mnemonic": "ObserveState", "definition": "Report current system or environment state"},
+    {"mnemonic": "ObserveChange", "definition": "Report a detected change"},
+    {"mnemonic": "ObserveError", "definition": "Report an observed error condition"},
+    # Information
+    {"mnemonic": "InformResult", "definition": "Share a computed or derived result"},
+    {"mnemonic": "InformStatus", "definition": "Provide status update"},
+    {"mnemonic": "InformComplete", "definition": "Report task completion"},
+    {"mnemonic": "InformBlocked", "definition": "Report being blocked on something"},
+    {"mnemonic": "InformProgress", "definition": "Share progress update"},
+    # Questions
+    {"mnemonic": "AskClarify", "definition": "Request clarification on requirements"},
+    {"mnemonic": "AskStatus", "definition": "Query current status"},
+    {"mnemonic": "AskPermission", "definition": "Request permission to proceed"},
+    {"mnemonic": "AskResource", "definition": "Query resource availability"},
+    # Requests
+    {"mnemonic": "RequestTask", "definition": "Request execution of a task"},
+    {"mnemonic": "RequestPlan", "definition": "Request creation of a plan"},
+    {"mnemonic": "RequestReview", "definition": "Request review of work"},
+    {"mnemonic": "RequestHelp", "definition": "Request assistance"},
+    {"mnemonic": "RequestCancel", "definition": "Request cancellation"},
+    {"mnemonic": "RequestPriority", "definition": "Request priority change"},
+    {"mnemonic": "RequestResource", "definition": "Request allocation of resource"},
+    # Proposals
+    {"mnemonic": "ProposePlan", "definition": "Propose a plan for consideration"},
+    {"mnemonic": "ProposeChange", "definition": "Propose a modification"},
+    {"mnemonic": "ProposeAlternative", "definition": "Propose an alternative approach"},
+    {"mnemonic": "ProposeRollback", "definition": "Propose reverting changes"},
+    # Commitments
+    {"mnemonic": "CommitTask", "definition": "Commit to performing a task"},
+    {"mnemonic": "CommitDeadline", "definition": "Commit to a deadline"},
+    {"mnemonic": "CommitResource", "definition": "Commit resources"},
+    # Evaluations
+    {"mnemonic": "EvalApprove", "definition": "Evaluation: approved/positive"},
+    {"mnemonic": "EvalReject", "definition": "Evaluation: rejected/negative"},
+    {"mnemonic": "EvalNeedsWork", "definition": "Evaluation: needs revision"},
+    {"mnemonic": "EvalComplete", "definition": "Evaluation: work is complete"},
+    {"mnemonic": "EvalBlocked", "definition": "Evaluation: blocked by issue"},
+    # Meta/Control
+    {"mnemonic": "MetaAck", "definition": "Acknowledge receipt"},
+    {"mnemonic": "MetaSync", "definition": "Synchronization ping"},
+    {"mnemonic": "MetaHandoff", "definition": "Hand off responsibility"},
+    {"mnemonic": "MetaEscalate", "definition": "Escalate to higher authority"},
+    {"mnemonic": "MetaAbort", "definition": "Abort current operation"},
+    # Accept/Reject
+    {"mnemonic": "Accept", "definition": "Accept a proposal or request"},
+    {"mnemonic": "Reject", "definition": "Reject a proposal or request"},
+    {"mnemonic": "AcceptWithCondition", "definition": "Conditional acceptance"},
+    {"mnemonic": "Defer", "definition": "Defer decision"},
+    # Errors
+    {"mnemonic": "ErrorGeneric", "definition": "Generic error occurred"},
+    {"mnemonic": "ErrorTimeout", "definition": "Operation timed out"},
+    {"mnemonic": "ErrorResource", "definition": "Resource unavailable"},
+    {"mnemonic": "ErrorPermission", "definition": "Permission denied"},
+    {"mnemonic": "ErrorValidation", "definition": "Validation failed"},
+    # Fallback
+    {"mnemonic": "Fallback", "definition": "Unquantizable - see payload for natural language"},
 ]
 
 app = FastAPI(title="Slipstream Control Plane")
