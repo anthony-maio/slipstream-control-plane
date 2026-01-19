@@ -181,8 +181,20 @@ function App() {
         <Autotuner
           proposals={proposals}
           onApprove={(id) => {
+            if (!id) {
+              // Dismiss
+              setProposals(prev => prev.filter(p => p.id !== proposals[proposals.length - 1]?.id));
+              return;
+            }
             const p = proposals.find(p => p.id === id);
             if (p) {
+              // Send approval to backend
+              if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+                ws.current.send(JSON.stringify({
+                  type: 'approve_anchor',
+                  mnemonic: p.mnemonic
+                }));
+              }
               setToast(`Anchor '${p.mnemonic}' Registered to Universal Control Registry`);
               setTimeout(() => setToast(null), 3000);
             }

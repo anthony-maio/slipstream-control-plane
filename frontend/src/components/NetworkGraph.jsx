@@ -49,13 +49,15 @@ export function NetworkGraph({ messages }) {
         nodeList.forEach((node, index) => {
             const angle = (index / count) * 2 * Math.PI - (Math.PI / 2); // Start at top
 
-            // Calculate relative to center (0.5, 0.5) with radius 0.35 (35%)
+            // Calculate relative keypoints
             const relX = 0.5 + 0.35 * Math.cos(angle);
             const relY = 0.5 + 0.35 * Math.sin(angle);
 
             positions[node] = {
                 left: `${relX * 100}%`,
                 top: `${relY * 100}%`,
+                x: relX * 800, // Project to SVG ViewBox (800w)
+                y: relY * 500, // Project to SVG ViewBox (500h)
                 icon: ICONS[node] || Bot,
                 color: COLORS[node] || "text-gray-400"
             };
