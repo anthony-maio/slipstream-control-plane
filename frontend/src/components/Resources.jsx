@@ -65,7 +65,7 @@ export function Resources({ onNavigate }) {
 
             {/* External Link */}
             <a
-                href="https://github.com/making-minds/slipstream"
+                href="https://raw.githubusercontent.com/anthony-maio/slipcore/refs/heads/master/spec/slip-spec.md"
                 target="_blank"
                 rel="noreferrer"
                 className="block p-4 mt-8 bg-black/20 border border-white/5 rounded-xl text-center text-sm text-secondary hover:text-white hover:bg-black/40 transition-colors"
