@@ -105,6 +105,15 @@ export function TrafficLog({ messages, mode }) {
                                         </>
                                     )}
                                 </div>
+                                {/* Gemini Reasoning - shows WHY this anchor was chosen */}
+                                {msg.gemini_reasoning && (
+                                    <div className="mt-2 pt-2 border-t border-border/20 flex items-start gap-1.5">
+                                        <span className="shrink-0 w-4 h-4 rounded bg-gradient-to-br from-violet-500 to-blue-500 text-[8px] font-bold text-white flex items-center justify-center">G</span>
+                                        <span className="text-violet-300/80 text-[10px] leading-relaxed">
+                                            {msg.gemini_reasoning}
+                                        </span>
+                                    </div>
+                                )}
                                 <div className="text-secondary/40 text-[10px] mt-1.5">
                                     Size: {msg.metrics.json_tokens}b → {msg.metrics.slip_tokens}b
                                 </div>

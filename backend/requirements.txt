@@ -3,3 +3,4 @@ uvicorn
 websockets
 slipcore>=2.4.0
 python-multipart
+google-generativeai>=0.8.0
