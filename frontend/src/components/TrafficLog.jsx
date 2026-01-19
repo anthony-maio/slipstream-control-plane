@@ -1,6 +1,45 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Box, Cpu, Zap, TrendingDown } from 'lucide-react';
+import { ArrowRight, Box, Cpu, Zap, TrendingDown, Server, Database, Brain, Globe, Laptop, Bot, User } from 'lucide-react';
+
+// Icon mappings (same as NetworkGraph)
+const ICONS = {
+    Planner: Brain,
+    Executor: Server,
+    Frontend: Laptop,
+    Backend: Database,
+    QA: Globe,
+    HumanOperator: User
+};
+
+const COLORS = {
+    Planner: "text-purple-400",
+    Executor: "text-blue-400",
+    Frontend: "text-pink-400",
+    Backend: "text-green-400",
+    QA: "text-orange-400",
+    HumanOperator: "text-yellow-400"
+};
+
+const BG_COLORS = {
+    Planner: "bg-purple-500/20 border-purple-500/30",
+    Executor: "bg-blue-500/20 border-blue-500/30",
+    Frontend: "bg-pink-500/20 border-pink-500/30",
+    Backend: "bg-green-500/20 border-green-500/30",
+    QA: "bg-orange-500/20 border-orange-500/30",
+    HumanOperator: "bg-yellow-500/20 border-yellow-500/30"
+};
+
+function AgentIcon({ name }) {
+    const IconComponent = ICONS[name] || Bot;
+    const colorClass = COLORS[name] || "text-gray-400";
+    const bgClass = BG_COLORS[name] || "bg-gray-500/20 border-gray-500/30";
+    return (
+        <div className={`w-8 h-8 rounded-lg border flex items-center justify-center ${bgClass}`}>
+            <IconComponent className={colorClass} size={16} />
+        </div>
+    );
+}
 
 export function TrafficLog({ messages, mode }) {
     return (
@@ -26,15 +65,11 @@ export function TrafficLog({ messages, mode }) {
                             className="group relative"
                         >
                             <div className="flex items-start gap-4 p-4 rounded-xl bg-background/40 hover:bg-background/80 border border-border/50 hover:border-primary/20 transition-all">
-                                {/* Agent Avatar mockup */}
+                                {/* Agent Icons */}
                                 <div className="flex flex-col items-center gap-2 min-w-[60px]">
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold font-mono text-white">
-                                        {msg.src[0]}
-                                    </div>
+                                    <AgentIcon name={msg.src} />
                                     <ArrowRight size={14} className="text-secondary rotate-90" />
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-xs font-bold font-mono text-white">
-                                        {msg.dst[0]}
-                                    </div>
+                                    <AgentIcon name={msg.dst} />
                                 </div>
 
                                 <div className="flex-1 space-y-3">

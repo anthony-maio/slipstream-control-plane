@@ -19,7 +19,7 @@ const COLORS = {
     Frontend: "text-pink-400",
     Backend: "text-green-400",
     QA: "text-orange-400",
-    HumanOperator: "text-white"
+    HumanOperator: "text-yellow-400"
 };
 
 export function NetworkGraph({ messages }) {
@@ -49,9 +49,9 @@ export function NetworkGraph({ messages }) {
         nodeList.forEach((node, index) => {
             const angle = (index / count) * 2 * Math.PI - (Math.PI / 2); // Start at top
 
-            // Calculate relative keypoints
-            const relX = 0.5 + 0.35 * Math.cos(angle);
-            const relY = 0.5 + 0.35 * Math.sin(angle);
+            // Calculate relative keypoints (reduced radius for better containment)
+            const relX = 0.5 + 0.28 * Math.cos(angle);
+            const relY = 0.5 + 0.30 * Math.sin(angle);
 
             positions[node] = {
                 left: `${relX * 100}%`,
@@ -94,7 +94,7 @@ export function NetworkGraph({ messages }) {
     }, [messages, layout]);
 
     return (
-        <div className="w-full h-[400px] bg-card/50 border border-border rounded-2xl relative overflow-hidden backdrop-blur-sm shadow-xl">
+        <div className="w-full h-[400px] bg-card/50 border border-border rounded-2xl relative overflow-hidden backdrop-blur-sm shadow-xl p-4">
             <div className="absolute inset-0 bg-grid-white/[0.02]" />
 
             <svg className="w-full h-full" viewBox="0 0 800 500">
@@ -167,18 +167,7 @@ export function NetworkGraph({ messages }) {
                 </motion.div>
             ))}
 
-            {/* Legend */}
-            <div className="absolute bottom-4 left-4 flex flex-col gap-2 p-3 bg-black/40 backdrop-blur-md rounded-xl border border-white/5 text-xs font-mono text-secondary">
-                <div className="font-bold text-white mb-1">Traffic Types</div>
-                <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-                    <span><strong className="text-indigo-400">Slipstream</strong> (Quantized/Compressed)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-sm bg-amber-500 opacity-80" />
-                    <span><strong className="text-amber-400">Legacy JSON</strong> (Verbose/Heavy)</span>
-                </div>
-            </div>
+
 
         </div>
     );

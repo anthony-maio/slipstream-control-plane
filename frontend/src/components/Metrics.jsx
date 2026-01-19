@@ -22,7 +22,7 @@ export function Metrics({ stats }) {
             value: `$${(stats.totalSavedTokens * 0.00001).toFixed(4)}`, // ~$10/1M blended assumption
             icon: DollarSign,
             color: "text-blue-400",
-            sub: "@ GPT-5 pricing"
+            sub: "@ Gemini 3 pricing"
         },
         // Advanced Metrics
         {

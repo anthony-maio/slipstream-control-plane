@@ -31,18 +31,22 @@ export function Autotuner({ proposals, onApprove }) {
 
                     <div className="flex gap-3">
                         <button
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 console.log("Approving proposal:", proposal.id);
                                 onApprove(proposal.id);
                             }}
-                            className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white py-3 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer select-none"
                         >
                             <Check size={16} />
                             Approve
                         </button>
                         <button
-                            onClick={() => onApprove(null)} // Dismiss
-                            className="px-4 py-2 rounded-lg text-sm font-medium text-secondary hover:bg-white/5 transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onApprove(null);
+                            }}
+                            className="px-4 py-3 rounded-lg text-sm font-medium text-secondary hover:bg-white/10 active:scale-95 transition-all cursor-pointer select-none"
                         >
                             Dismiss
                         </button>
